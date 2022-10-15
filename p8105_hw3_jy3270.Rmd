@@ -147,3 +147,19 @@ accel_tidy %>%
   ) +
   theme(axis.text.x=element_text(angle = 90))
 ```
+
+## Problem 3
+- load in data
+```{r}
+library(p8105.datasets)
+noaa_df = data("ny_noaa")
+```
+
+This dataset contains `r nrow(noaa_df)` rows and `r ncol(noaa_df)` columns. Each row 
+representing a single observation from a New York state weather station from
+January 1, 1981 to December 31, 2010. Variables include weather station ID (id), 
+date of observation (date), precipitation in tenths of mm (prcp), snowfall in mm (snow), 
+snow depth in mm (snwd), maximum temperature in tenths of degrees C (tmax), 
+and minimum temperature in tenths of degrees C (tmin). Since each weather station 
+may collect only a subset of these variables, the resulting dataset contains 
+substantial missing data.
