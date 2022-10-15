@@ -163,3 +163,28 @@ snow depth in mm (snwd), maximum temperature in tenths of degrees C (tmax),
 and minimum temperature in tenths of degrees C (tmin). Since each weather station 
 may collect only a subset of these variables, the resulting dataset contains 
 substantial missing data.
+
+- tidy the data
+```{r}
+tidy_ny_noaa =
+  ny_noaa %>%
+  separate(date, sep="-",into=c("year","month","day")) %>%
+  mutate(prcp = as.numeric(prcp), snow = as.numeric(snow), snwd = as.numeric(snwd), tmax = as.numeric(tmax), tmin = as.numeric(tmin)) %>%
+  mutate(tmax = tmax/10,
+         tmin = tmin/10,
+         prcp = prcp/10)
+
+head(tidy_ny_noaa)
+```
+
+- find the most commonly observed values
+```{r}
+tidy_ny_noaa %>%
+  group_by(snow)%>%
+  summarise(count = n())%>%
+  arrange(desc(count))
+head(tidy_ny_noaa)
+```
+
+The most common values for snowfall is 0. This is probably because most places in New York 
+don't snow most time in the year.
