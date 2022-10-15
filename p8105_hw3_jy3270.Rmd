@@ -96,3 +96,30 @@ accel_tidy <- accel_data %>%
 
 head(accel_tidy)
 ```
+
+This dataset contains `r ncol(accel_tidy)` variables, included week, day_id, day,
+week_type, minute, and activity counts in each one-minute interval measured by 
+of a 24-hour day starting from midnight, and collected `r nrow(accel_tidy)` 
+observations in total.  
+
+- create a total activity variable for each day  
+```{r}
+total_activity =
+  accel_tidy %>%
+  group_by(week, day) %>%
+  summarise(total_activity_counts=sum(activity_count))
+
+total_activity
+```
+I can't see any clear trend of activity count.
+
+```{r}
+total_activity %>%
+  ggplot(aes(x = week, y = total_activity_counts, color = day, group = day)) +
+  geom_point() +
+  geom_line() + 
+  labs(y = "total activity count by days in week", 
+       title = "total activity count vs. week by days in week")
+```
+
+Still, there are no apparent trend when we focus on the total activity over the day
