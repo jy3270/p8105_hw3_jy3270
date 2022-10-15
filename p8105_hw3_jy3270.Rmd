@@ -76,3 +76,23 @@ instacart %>%
   spread(key = order_dow, value = mean_hour) %>%
   knitr::kable(digits = 2)
 ```
+
+## Problem 2
+```{r}
+# loading the data
+accel_data <- read_csv(file = "./data/accel_data.csv") %>% janitor::clean_names()
+```
+- Load and tidy the data
+```{r}
+accel_tidy <- accel_data %>%  
+  pivot_longer(cols = "activity_1":"activity_1440", 
+               names_to = "minute", 
+               values_to = "activity_count") %>%
+  mutate(
+    week_type = ifelse((day == "Saturday" | day == "Sunday"),
+     "weekend", "weekday"),
+  ) %>%
+  select(week,day_id,day,week_type,everything())
+
+head(accel_tidy)
+```
