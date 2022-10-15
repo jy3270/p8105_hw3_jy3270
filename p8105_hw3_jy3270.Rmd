@@ -123,3 +123,27 @@ total_activity %>%
 ```
 
 Still, there are no apparent trend when we focus on the total activity over the day
+
+- single-panel plot that shows the 24-hour activity time course for each day
+```{r}
+accel_tidy %>%
+  mutate(minute = as.integer(sub("activity_","",minute)),
+         day = factor(day, levels =
+                        c("Monday","Tuesday","Wednesday","Thursday","Friday",
+                          "Saturday","Sunday"))) %>%
+ ggplot(aes(x = minute, y = activity_count, color = day)) + 
+    geom_point(alpha = 0.5) + 
+    labs(
+    title = "Activity time courses by day",
+    x = "Minute",
+    y = "Activity Count") +
+  scale_x_continuous(
+    breaks=c(60,120,180,240,300,360,420,480,540,600,660,720,780,840,900,960,1020,
+             1080,1140,1200,1260,1320,1380,1440),
+    labels=c("1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM",
+             "7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 AM",
+             "1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM",
+             "8:00 PM","9:00 PM","10:00 PM","11:00 PM","00:00 AM")
+  ) +
+  theme(axis.text.x=element_text(angle = 90))
+```
