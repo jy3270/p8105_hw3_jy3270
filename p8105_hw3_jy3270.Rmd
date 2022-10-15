@@ -188,3 +188,80 @@ head(tidy_ny_noaa)
 
 The most common values for snowfall is 0. This is probably because most places in New York 
 don't snow most time in the year.
+
+- two-panelplot showing the avergae temperature in Jan and July in each station
+
+```{r}
+tidy_ny_noaa %>%
+  filter(month == c("01","07")) %>%
+  group_by(id, year, month) %>%
+  summarize(mean_tmax = mean(tmax, na.rm = TRUE)) %>%
+  mutate(month = recode(month, "01" = "January", "07" = "July"))%>%
+  ggplot() +
+  geom_boxplot(mapping = aes(x = year, y = mean_tmax)) +
+  labs(
+    x = "Year",
+    y = "Average Max Temperature (degrees C)",
+    title = "Average Max Temperature in January and July"
+  )+
+  facet_wrap(~ month) +
+ theme(axis.text.x=element_text(angle = 90,vjust=0.5,hjust=1,size=3))
+```
+
+We can see that the average max temperature for each station accross years is fluctuating. 
+There is always a decreasing pattern after some years of increase in average max temperature. 
+Then the temperature will increase again. For average max temperature in January, 
+there is an out-liner for noth January and July.The outlier in January is above 
+the average temperature, and, the general outliner in July is lower than average
+temperature.
+
+- (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the 
+best option)
+
+```{r}
+tmax_boxplot <- tidy_ny_noaa %>%
+  ggplot(aes(y = tmax), na.rm = TRUE) +
+  geom_boxplot() +
+  labs(
+    y = "Maximum temperature (tenths of degrees C)"
+  ) +
+  scale_y_continuous(
+    breaks = c(-60, -40, -20, 0, 20, 40, 60), 
+    limits = c(-65, 70)) +
+  theme(axis.text.x = element_blank()) +
+  labs(title = "Maximum temperature") +
+  theme(axis.text.x=element_text(angle = 90,vjust=0.5,hjust=1,size=3))
+
+tmin_boxplot <- tidy_ny_noaa %>%
+  ggplot(aes(y = tmin), na.rm = TRUE) +
+  geom_boxplot() +
+  labs(
+    y = "Minimum temperature (tenths of degrees C)"
+  ) +
+  scale_y_continuous(
+    breaks = c(-60, -40, -20, 0, 20, 40, 60), 
+    limits = c(-65, 70)) +
+  theme(axis.text.x = element_blank()) +
+  labs(title = "Minimum temperature") +
+  theme(axis.text.x=element_text(angle = 90,vjust=0.5,hjust=1,size=3))
+tmax_boxplot + tmin_boxplot
+```
+
+Both plots are mostly symmetric.
+
+- (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
+```{r}
+tidy_ny_noaa %>%
+  filter(
+    snow > 0, snow < 100) %>% 
+  group_by(year, snow) %>% 
+  summarize(count = n()) %>%
+  ggplot(aes(x = snow, y = count, color = year)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~year)
+```
+
+We can see that each year the snow pattern follows similar patterns. However, we 
+can see a slightly decrease of the amount of the snowfall in 1998, 2003, 2006, 
+and 2007, while there are increase in counts of snowfall value  2007-2010, which 
+indicates that within those year have more snows comparing to the previous years.
